@@ -21,7 +21,7 @@
         private String[] tipos;
 
         private static class DoctorHolder {
-            public TextView textViewValorNome;
+            public TextView textViewNameValue;
             public TextView textViewValorTipo;
             public TextView textViewValorBolsista;
             public TextView textViewPaymentTypeValue;
@@ -57,14 +57,14 @@
             if (convertView == null){
 
                 LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                convertView = inflater.inflate(R.layout.row_list_doctor, parent, false);
+                convertView = inflater.inflate(R.layout.row_list_professional, parent, false);
 
                 holder = new DoctorHolder();
 
-                holder.textViewValorNome     = convertView.findViewById(R.id.textViewValorNome);
-                holder.textViewValorTipo     = convertView.findViewById(R.id.textViewValorTipo);
-                holder.textViewValorBolsista = convertView.findViewById(R.id.textViewValorBolsista);
-                holder.textViewPaymentTypeValue = convertView.findViewById(R.id.textViewTipoPagamento);
+                holder.textViewNameValue = convertView.findViewById(R.id.textViewNameValue);
+                holder.textViewValorTipo     = convertView.findViewById(R.id.textViewTypeValue);
+                holder.textViewValorBolsista = convertView.findViewById(R.id.textViewReferredProfessional);
+                holder.textViewPaymentTypeValue = convertView.findViewById(R.id.textViewPaymentType);
 
                 convertView.setTag(holder);
 
@@ -76,7 +76,7 @@
 
             Doctor doctor = doctorsList.get(position);
 
-            holder.textViewValorNome.setText(doctor.getNome());
+            holder.textViewNameValue.setText(doctor.getNome());
 
             holder.textViewValorTipo.setText(tipos[doctor.getTipo()]);
 
