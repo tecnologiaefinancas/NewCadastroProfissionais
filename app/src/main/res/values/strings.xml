@@ -1,0 +1,46 @@
+<resources>
+    <string name="app_name">Register Professionals</string>
+    <string name="add">Add</string>
+    <string name="about">About</string>
+    <string name="app_description">The goal of the app is to create an environment to centralize information regarding the personal list of Doctors and Service Providers.
+
+In the app, it is possible to track if the professional was recommended by a friend, if the service has already been provided, among other things.</string>
+    <string name="author">Author: Natalia Feitosa Santos</string>
+    <string name="save">Save</string>
+    <string name="clear">Clean</string>
+    <string name="cancel">Cancel</string>
+    <string name="name">Name:</string>
+    <string name="name_cant_be_empty">Name cannot be empty!</string>
+    <string name="as_entradas_foram_apagadas">The entries have been deleted!</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
+    <string name="new_professional">New Professional</string>
+    <string name="edit_professional">Edit Professional</string>
+
+    <string name="doctor">Doctor</string>
+    <string name="maintenance">Maintenance</string>
+
+
+    <string name="type">Type:</string>
+    <string name="type_cant_be_empty">Type cannot be empty!</string>
+    <string name="sugerir_tipo">Suggest Type</string>
+    <string name="ordenacao">Ordering</string>
+    <string name="referred_professional">Referred professional</string>
+    <string name="payment_type">Payment used:</string>
+    <string name="pix">Pix</string>
+    <string name="boleto">Bill</string>
+    <string name="credit_card">Credit Card</string>
+    <string name="payment_type_cant_be_empty">Payment type can\'t be empty!</string>
+    <string name="not_referred">Professional wasn\'t referred before.</string>
+    <string name="warn">Warning</string>
+    <string name="ok">OK</string>
+    <string name="confirmation">Confirmation</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="deseja_realmente_apagar">Do you really want to delete?</string>
+
+    <string name="erro_ao_tentar_inserir">Error trying to insert!</string>
+    <string name="erro_ao_tentar_alterar">Error trying to change!</string>
+    <string name="erro_ao_tentar_apagar">Error trying to delete!</string>
+
+</resources>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Cadastro de Profissionais</string>
+    <string name="add">Adicionar</string>
+    <string name="about">Sobre</string>
+    <string name="app_description">O objetivo do app é criar um ambiente para centralizar informações referentes a lista pessoal de Médicos e Prestadores de Serviços.
+
+    No aplicativo é possível acompanhar se o profissional foi sugerido por algum amigo, se o serviço já foi prestado. Entre outros.</string>
+
+    <string name="author">Autor: Natalia Feitosa Santos</string>
+    <string name="save">Salvar</string>
+    <string name="clear">Limpar</string>
+    <string name="cancel">Cancelar</string>
+    <string name="name">Nome:</string>
+    <string name="name_cant_be_empty">Nome não pode ser vazio!</string>
+    <string name="as_entradas_foram_apagadas">As entradas foram apagadas!</string>
+    <string name="edit">Editar</string>
+    <string name="delete">Excluir</string>
+    <string name="new_professional">Novo Profissional</string>
+    <string name="edit_professional">Editar Profissional</string>
+
+    <string name="doctor">Médico</string>
+    <string name="maintenance">Manutenção</string>
+
+
+    <string name="type">Tipo:</string>
+    <string name="type_cant_be_empty">Tipo não pode ser vazio!</string>
+    <string name="sugerir_tipo">Sugerir Tipo</string>
+    <string name="ordenacao">Ordenacao</string>
+    <string name="referred_professional">Profissional indicado</string>
+    <string name="payment_type">Tipo de Pagamento:</string>
+    <string name="pix">Pix</string>
+    <string name="boleto">Boleto</string>
+    <string name="credit_card">Cartão</string>
+    <string name="payment_type_cant_be_empty">A forma de pagamento não pode estar vazia!</string>
+    <string name="not_referred">Profissional não foi sugerido anteriormente por alguém.</string>
+    <string name="warn">Aviso</string>
+    <string name="ok">OK</string>
+    <string name="confirmation">Confirmação</string>
+    <string name="yes">Sim</string>
+    <string name="no">Não</string>
+    <string name="deseja_realmente_apagar">Deseja realmente apagar?</string>
+    <string name="erro_ao_tentar_inserir">Erro ao tentar inserir!</string>
+    <string name="erro_ao_tentar_alterar">Erro ao tentar alterar!</string>
+    <string name="erro_ao_tentar_apagar">Erro ao tentar apagar!</string>
+</resources>
