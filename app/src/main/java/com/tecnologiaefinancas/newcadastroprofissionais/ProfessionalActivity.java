@@ -1,7 +1,5 @@
 package com.tecnologiaefinancas.newcadastroprofissionais;
 
-import static android.text.TextUtils.isEmpty;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -10,7 +8,9 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RadioButton;
@@ -32,11 +32,11 @@ import com.tecnologiaefinancas.newcadastroprofissionais.utils.Dialogs;
 
 public class ProfessionalActivity extends AppCompatActivity {
 
-    public static final String MODO = "MODO";
+    public static final String MODE = "MODE";
 
     public static final String ID = "ID";
 
-    public static final int NEWPROFESSIONAL = 1;
+    public static final int NEW_PROFESSIONAL = 1;
 
     public static final int EDIT = 2;
 
@@ -56,23 +56,23 @@ public class ProfessionalActivity extends AppCompatActivity {
 
     private Spinner spinnerStatus;
 
-    private int modo;
+    private int mode;
 
     private Professional professionalAddedToEdit;
 
-    public static final String SUGERIR_TIPO = "SUGERIR_TPO";
+    public static final String SUGGEST_TYPE = "SUGGEST_TYPE";
 
-    public static final String LAST_TYPE = "ULTIMO_TIPO";
+    public static final String LAST_TYPE = "LAST_TYPE";
 
     private boolean suggestType = false;
 
     private int lastType = 0;
 
-    public static void newDoctor(AppCompatActivity activity, ActivityResultLauncher<Intent> launcher){
+    public static void newProfessional(AppCompatActivity activity, ActivityResultLauncher<Intent> launcher){
 
         Intent intent = new Intent(activity, ProfessionalActivity.class);
 
-        intent.putExtra(MODO, NEWPROFESSIONAL);
+        intent.putExtra(MODE, NEW_PROFESSIONAL);
 
         launcher.launch(intent);
     }
@@ -81,7 +81,7 @@ public class ProfessionalActivity extends AppCompatActivity {
 
         Intent intent = new Intent(activity, ProfessionalActivity.class);
 
-        intent.putExtra(MODO, EDIT);
+        intent.putExtra(MODE, EDIT);
         intent.putExtra(ID, pessoa.getId());
 
         launcher.launch(intent);
@@ -120,52 +120,55 @@ public class ProfessionalActivity extends AppCompatActivity {
 
         if (bundle != null) {
 
-            modo = bundle.getInt(MODO, NEWPROFESSIONAL);
+            mode = bundle.getInt(MODE, NEW_PROFESSIONAL);
 
-            if (modo == NEWPROFESSIONAL) {
+            if (mode == NEW_PROFESSIONAL) {
                 setTitle(getString(R.string.new_professional));
 
                 if (suggestType){
                     spinnerType.setSelection(lastType);
                 }
 
-            } else if (modo == EDIT) {
-                setTitle(getString(R.string.edit_professional));
-
+            } else if (mode == EDIT) {
                 long id = bundle.getLong(ID);
-
-                ProfessionalDatabase database = ProfessionalDatabase.getDatabase(this);
-
-                professionalAddedToEdit = database.getProfessionalDao().queryForId(id);
-
-                editTextName.setText(professionalAddedToEdit.getName());
-                editTextName.setSelection(editTextName.getText().length());
-
-                spinnerType.setSelection(professionalAddedToEdit.getTipo());
-                spinnerStatus.setSelection(0);
-
-                checkBoxReferredProfessional.setChecked(professionalAddedToEdit.isReferred());
-
-                PaymentType originalPaymentType = professionalAddedToEdit.getPaymentType();
-
-                editTextMultiLineComments.setText(professionalAddedToEdit.getComments());
-
-                RadioButton button = null;
-
-                if (originalPaymentType == PaymentType.PIX){
-                    button = findViewById(R.id.radioButtonPix);
-                }else
-                    if (originalPaymentType == PaymentType.Boleto){
-                        button = findViewById(R.id.radioButtonBill);
-                    }else
-                        if (originalPaymentType == PaymentType.Cartao){
-                            button = findViewById(R.id.radioButtonCreditCard);
-                        }
-
-                if (button != null){
-                    button.setChecked(true);
-                }
+                editProfessional(id);
             }
+        }
+    }
+
+    private void editProfessional(long id) {
+        setTitle(getString(R.string.edit_professional));
+
+        ProfessionalDatabase database = ProfessionalDatabase.getDatabase(this);
+
+        professionalAddedToEdit = database.getProfessionalDao().queryForId(id);
+
+        editTextName.setText(professionalAddedToEdit.getName());
+        editTextName.setSelection(editTextName.getText().length());
+
+        spinnerType.setSelection(professionalAddedToEdit.getTipo());
+        spinnerStatus.setSelection(0);
+
+        checkBoxReferredProfessional.setChecked(professionalAddedToEdit.isReferred());
+
+        PaymentType originalPaymentType = professionalAddedToEdit.getPaymentType();
+
+        editTextMultiLineComments.setText(professionalAddedToEdit.getComments());
+
+        RadioButton button = null;
+
+        if (originalPaymentType == PaymentType.PIX){
+            button = findViewById(R.id.radioButtonPix);
+        }else
+        if (originalPaymentType == PaymentType.Boleto){
+            button = findViewById(R.id.radioButtonBill);
+        }else
+        if (originalPaymentType == PaymentType.Cartao){
+            button = findViewById(R.id.radioButtonCreditCard);
+        }
+
+        if (button != null){
+            button.setChecked(true);
         }
     }
 
@@ -211,7 +214,7 @@ public class ProfessionalActivity extends AppCompatActivity {
                     return;
                 }
 
-        if (modo == EDIT &&
+        if (mode == EDIT &&
             name.equals(professionalAddedToEdit.getName())    &&
             tipo     == professionalAddedToEdit.getTipo()     &&
             paymentType == professionalAddedToEdit.getPaymentType() &&
@@ -227,7 +230,7 @@ public class ProfessionalActivity extends AppCompatActivity {
 
         ProfessionalDatabase database = ProfessionalDatabase.getDatabase(this);
 
-        if (modo == NEWPROFESSIONAL){
+        if (mode == NEW_PROFESSIONAL){
 
             Professional professional = new Professional(name, tipo, isReferred, paymentType, comments);
 
@@ -273,6 +276,8 @@ public class ProfessionalActivity extends AppCompatActivity {
 
         radioGroupTypeOfPayment.clearCheck();
 
+        editTextMultiLineComments.setText(" ");
+
         Toast.makeText(this,
                        R.string.entires_were_deleted,
                        Toast.LENGTH_SHORT).show();
@@ -292,7 +297,7 @@ public class ProfessionalActivity extends AppCompatActivity {
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
 
-        MenuItem item = menu.findItem(R.id.menuItemSugerirTipo);
+        MenuItem item = menu.findItem(R.id.menuItemLastAdded);
 
         item.setChecked(suggestType);
 
@@ -304,24 +309,18 @@ public class ProfessionalActivity extends AppCompatActivity {
 
         int idMenuItem = item.getItemId();
 
-        if (idMenuItem == R.id.menuItemSalvar){
+        if (idMenuItem == R.id.menuItemSave){
             save();
             return true;
         }else
-            if (idMenuItem == R.id.menuItemLimpar){
+            if (idMenuItem == R.id.menuItemClear){
                 clear();
                 return true;
             }else
-                if (idMenuItem == R.id.menuItemSugerirTipo){
+                if (idMenuItem == R.id.menuItemLastAdded){
 
-                    boolean valor = !item.isChecked();
+                    System.out.println("A concluir");
 
-                    saveSuggestedType(valor);
-                    item.setChecked(valor);
-
-                    if (suggestType){
-                        spinnerType.setSelection(lastType);
-                    }
 
                     return true;
                 }else
@@ -337,7 +336,7 @@ public class ProfessionalActivity extends AppCompatActivity {
 
         SharedPreferences shared = getSharedPreferences(MainActivity.FILE, Context.MODE_PRIVATE);
 
-        suggestType = shared.getBoolean(SUGERIR_TIPO, suggestType);
+        suggestType = shared.getBoolean(SUGGEST_TYPE, suggestType);
     }
 
     private void saveSuggestedType(boolean newValue){
@@ -346,7 +345,7 @@ public class ProfessionalActivity extends AppCompatActivity {
 
         SharedPreferences.Editor editor = shared.edit();
 
-        editor.putBoolean(SUGERIR_TIPO, newValue);
+        editor.putBoolean(SUGGEST_TYPE, newValue);
 
         editor.commit();
 
@@ -372,4 +371,5 @@ public class ProfessionalActivity extends AppCompatActivity {
 
         lastType = newValue;
     }
+
 }

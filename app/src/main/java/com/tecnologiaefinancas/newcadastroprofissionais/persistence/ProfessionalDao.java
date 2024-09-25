@@ -30,4 +30,7 @@ public interface ProfessionalDao {
 
     @Query("SELECT * FROM Professional ORDER BY name DESC")
     List<Professional> queryAllDownward();
+
+    @Query("SELECT * FROM Professional ORDER BY id DESC LIMIT 1")
+    Professional getLastAdded();
 }

@@ -285,7 +285,7 @@ public class MainActivity extends AppCompatActivity {
         int idMenuItem = item.getItemId();
 
         if (idMenuItem == R.id.menuItemAdd){
-            ProfessionalActivity.newDoctor(this, launcherNewDoctor);
+            ProfessionalActivity.newProfessional(this, launcherNewDoctor);
             return true;
         }else
             if (idMenuItem == R.id.menuItemOrder){

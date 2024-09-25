@@ -27,7 +27,7 @@ In the app, it is possible to track if the professional was recommended by a fri
 
     <string name="type">Type of professional:</string>
     <string name="type_cant_be_empty">Type cannot be empty!</string>
-    <string name="suggest_type">Suggest Type</string>
+    <string name="last_added">Last Added</string>
     <string name="ordering">Ordering</string>
     <string name="referred_professional">Received referral</string>
     <string name="service_status">Service status:</string>

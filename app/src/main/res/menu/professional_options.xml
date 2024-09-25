@@ -3,14 +3,14 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/menuItemSalvar"
+        android:id="@+id/menuItemSave"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:icon="@android:drawable/ic_menu_save"
         android:title="@string/save"
         app:showAsAction="ifRoom" />
     <item
-        android:id="@+id/menuItemLimpar"
+        android:id="@+id/menuItemClear"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:icon="@drawable/ic_action_clear"
@@ -18,10 +18,10 @@
         app:showAsAction="ifRoom" />
 
     <item
-        android:id="@+id/menuItemSugerirTipo"
+        android:id="@+id/menuItemLastAdded"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:checkable="true"
-        android:title="@string/suggest_type" />
+        android:title="@string/last_added" />
 
 </menu>

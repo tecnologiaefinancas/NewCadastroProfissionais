@@ -29,7 +29,7 @@
 
     <string name="type">Tipo de profissional:</string>
     <string name="type_cant_be_empty">Tipo não pode ser vazio!</string>
-    <string name="suggest_type">Sugerir Tipo</string>
+    <string name="last_added">Último profissional adicionado</string>
     <string name="ordering">Ordenação</string>
     <string name="referred_professional">Recebida indicação</string>
     <string name="service_status">Status do serviço:</string>
