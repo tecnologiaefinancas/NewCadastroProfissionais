@@ -8,36 +8,25 @@ import java.util.Comparator;
 @Entity
 public class Professional {
 
-    public static Comparator ordenacaoCrescente = new Comparator<Professional>() {
-        @Override
-        public int compare(Professional pessoa1, Professional pessoa2) {
-            return pessoa1.getNome().compareToIgnoreCase(pessoa2.getNome());
-        }
-    };
-
-    public static Comparator ordenacaoDecrescente = new Comparator<Professional>() {
-        @Override
-        public int compare(Professional professionalA, Professional professionalB) {
-            return -1 * professionalA.getNome().compareToIgnoreCase(professionalB.getNome());
-        }
-    };
-
     @PrimaryKey(autoGenerate = true)
     private long id;
 
-    private String nome;
+    private String name;
 
     private int tipo;
 
-    private boolean indicado;
+    private boolean isReferred;
 
     private PaymentType paymentType;
 
-    public Professional(String nome, int tipo, boolean indicado, PaymentType paymentType) {
-        this.nome     = nome;
+    private String comments;
+
+    public Professional(String name, int tipo, boolean isReferred, PaymentType paymentType, String comments) {
+        this.name = name;
         this.tipo     = tipo;
-        this.indicado = indicado;
+        this.isReferred = isReferred;
         this.paymentType = paymentType;
+        this.comments = comments;
     }
 
     public long getId() {
@@ -48,12 +37,12 @@ public class Professional {
         this.id = id;
     }
 
-    public String getNome() {
-        return nome;
+    public String getName() {
+        return name;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public int getTipo() {
@@ -64,12 +53,12 @@ public class Professional {
         this.tipo = tipo;
     }
 
-    public boolean isIndicado() {
-        return indicado;
+    public boolean isReferred() {
+        return isReferred;
     }
 
-    public void setIndicado(boolean indicado) {
-        this.indicado = indicado;
+    public void setReferred(boolean referred) {
+        this.isReferred = referred;
     }
 
     public PaymentType getPaymentType() {
@@ -80,8 +69,37 @@ public class Professional {
         this.paymentType = paymentType;
     }
 
+    public String getComments() {
+        return comments;
+    }
+
+    public void setComments(String comments) {
+        this.comments = comments;
+    }
+
     @Override
     public String toString() {
-        return nome + " - " + tipo + " - " + indicado + " - " + paymentType;
+        return "Professional{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", tipo=" + tipo +
+                ", isReferred=" + isReferred +
+                ", paymentType=" + paymentType +
+                ", comments='" + comments + '\'' +
+                '}';
     }
+
+    public static Comparator ordenacaoCrescente = new Comparator<Professional>() {
+        @Override
+        public int compare(Professional pessoa1, Professional pessoa2) {
+            return pessoa1.getName().compareToIgnoreCase(pessoa2.getName());
+        }
+    };
+
+    public static Comparator ordenacaoDecrescente = new Comparator<Professional>() {
+        @Override
+        public int compare(Professional professionalA, Professional professionalB) {
+            return -1 * professionalA.getName().compareToIgnoreCase(professionalB.getName());
+        }
+    };
 }

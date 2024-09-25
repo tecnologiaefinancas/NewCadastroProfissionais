@@ -1,5 +1,7 @@
 package com.tecnologiaefinancas.newcadastroprofissionais;
 
+import static android.text.TextUtils.isEmpty;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -34,15 +36,15 @@ public class ProfessionalActivity extends AppCompatActivity {
 
     public static final String ID = "ID";
 
-    public static final int NOVO = 1;
+    public static final int NEWPROFESSIONAL = 1;
 
-    public static final int EDITAR = 2;
+    public static final int EDIT = 2;
 
     private TextView textViewCreateProfessional;
 
     private EditText editTextName;
 
-    private Spinner spinnerTipo;
+    private Spinner spinnerType;
 
     private CheckBox checkBoxReferredProfessional;
 
@@ -56,13 +58,13 @@ public class ProfessionalActivity extends AppCompatActivity {
 
     private int modo;
 
-    private Professional originalProfessional;
+    private Professional professionalAddedToEdit;
 
     public static final String SUGERIR_TIPO = "SUGERIR_TPO";
 
-    public static final String ULTIMO_TIPO = "ULTIMO_TIPO";
+    public static final String LAST_TYPE = "ULTIMO_TIPO";
 
-    private boolean sugerirTipo = false;
+    private boolean suggestType = false;
 
     private int lastType = 0;
 
@@ -70,7 +72,7 @@ public class ProfessionalActivity extends AppCompatActivity {
 
         Intent intent = new Intent(activity, ProfessionalActivity.class);
 
-        intent.putExtra(MODO, NOVO);
+        intent.putExtra(MODO, NEWPROFESSIONAL);
 
         launcher.launch(intent);
     }
@@ -79,7 +81,7 @@ public class ProfessionalActivity extends AppCompatActivity {
 
         Intent intent = new Intent(activity, ProfessionalActivity.class);
 
-        intent.putExtra(MODO, EDITAR);
+        intent.putExtra(MODO, EDIT);
         intent.putExtra(ID, pessoa.getId());
 
         launcher.launch(intent);
@@ -97,8 +99,8 @@ public class ProfessionalActivity extends AppCompatActivity {
         }
 
         textViewCreateProfessional = findViewById(R.id.textViewCreateProfessional);
-        editTextName = findViewById(R.id.editTextName);
-        spinnerTipo        = findViewById(R.id.spinnerTipo);
+        editTextName = findViewById(R.id.editTextNameProfessional);
+        spinnerType = findViewById(R.id.spinnerTipo);
         checkBoxReferredProfessional = findViewById(R.id.checkBoxReferredProfessional);
         radioGroupTypeOfPayment = findViewById(R.id.radioGroupTypeOfPayment);
         spinnerStatus = findViewById(R.id.spinnerStatus);
@@ -108,42 +110,45 @@ public class ProfessionalActivity extends AppCompatActivity {
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
 
-        lerSugerirTipo();
-        lerUltimoTipo();
+        readSuggestedType();
+        readLastType();
 
         //Criacao de adapter para uso no Spinner
-        ArrayAdapter<String> adapterStatus = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, GetStatusDescription.getStatusDescriptions());
+        ArrayAdapter<String> adapterStatus = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, GetStatusDescription.getStatusDescriptions(this));
         adapterStatus.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerStatus.setAdapter(adapterStatus);
 
         if (bundle != null) {
 
-            modo = bundle.getInt(MODO, NOVO);
+            modo = bundle.getInt(MODO, NEWPROFESSIONAL);
 
-            if (modo == NOVO) {
+            if (modo == NEWPROFESSIONAL) {
                 setTitle(getString(R.string.new_professional));
 
-                if (sugerirTipo){
-                    spinnerTipo.setSelection(lastType);
+                if (suggestType){
+                    spinnerType.setSelection(lastType);
                 }
 
-            } else if (modo == EDITAR) {
+            } else if (modo == EDIT) {
                 setTitle(getString(R.string.edit_professional));
 
                 long id = bundle.getLong(ID);
 
                 ProfessionalDatabase database = ProfessionalDatabase.getDatabase(this);
 
-                originalProfessional = database.getProfessionalDao().queryForId(id);
+                professionalAddedToEdit = database.getProfessionalDao().queryForId(id);
 
-                editTextName.setText(originalProfessional.getNome());
+                editTextName.setText(professionalAddedToEdit.getName());
                 editTextName.setSelection(editTextName.getText().length());
 
-                spinnerTipo.setSelection(originalProfessional.getTipo());
+                spinnerType.setSelection(professionalAddedToEdit.getTipo());
+                spinnerStatus.setSelection(0);
 
-                checkBoxReferredProfessional.setChecked(originalProfessional.isIndicado());
+                checkBoxReferredProfessional.setChecked(professionalAddedToEdit.isReferred());
 
-                PaymentType originalPaymentType = originalProfessional.getPaymentType();
+                PaymentType originalPaymentType = professionalAddedToEdit.getPaymentType();
+
+                editTextMultiLineComments.setText(professionalAddedToEdit.getComments());
 
                 RadioButton button = null;
 
@@ -164,23 +169,30 @@ public class ProfessionalActivity extends AppCompatActivity {
         }
     }
 
-    public void salvar(){
+    public void save(){
 
-        String nome = editTextName.getText().toString();
+        String name = editTextName.getText().toString();
+        String comments = "";
 
-        if (nome == null || nome.trim().isEmpty()){
+
+
+        if (name == null || name.trim().isEmpty()){
             Dialogs.alert(this, R.string.name_cant_be_empty);
             editTextName.requestFocus();
             return;
         }
 
-        int tipo = spinnerTipo.getSelectedItemPosition();
+        if (editTextMultiLineComments != null){
+            comments = editTextMultiLineComments.getText().toString();
+        }
+
+        int tipo = spinnerType.getSelectedItemPosition();
         if (tipo < 0){
             Dialogs.alert(this, R.string.type_cant_be_empty);
             return;
         }
 
-        boolean bolsista = checkBoxReferredProfessional.isChecked();
+        boolean isReferred = checkBoxReferredProfessional.isChecked();
 
         int radioButtonId = radioGroupTypeOfPayment.getCheckedRadioButtonId();
 
@@ -199,71 +211,74 @@ public class ProfessionalActivity extends AppCompatActivity {
                     return;
                 }
 
-        if (modo == EDITAR &&
-            nome.equals(originalProfessional.getNome())    &&
-            tipo     == originalProfessional.getTipo()     &&
-            paymentType == originalProfessional.getPaymentType() &&
-            bolsista == originalProfessional.isIndicado()){
-            cancelar();
+        if (modo == EDIT &&
+            name.equals(professionalAddedToEdit.getName())    &&
+            tipo     == professionalAddedToEdit.getTipo()     &&
+            paymentType == professionalAddedToEdit.getPaymentType() &&
+            isReferred == professionalAddedToEdit.isReferred() &&
+            comments == professionalAddedToEdit.getComments()){
+            cancel();
             return;
         }
 
-        salvarUltimoTipo(tipo);
+        saveLastType(tipo);
 
         Intent intent = new Intent();
 
         ProfessionalDatabase database = ProfessionalDatabase.getDatabase(this);
 
-        if (modo == NOVO){
+        if (modo == NEWPROFESSIONAL){
 
-            Professional pessoa = new Professional(nome, tipo, bolsista, paymentType);
+            Professional professional = new Professional(name, tipo, isReferred, paymentType, comments);
 
-            long novoId = database.getProfessionalDao().insert(pessoa);
+            long newID = database.getProfessionalDao().insert(professional);
 
-            if (novoId <= 0){
-                Dialogs.alert(this, R.string.erro_ao_tentar_inserir);
+            if (newID <= 0){
+                Dialogs.alert(this, R.string.error_not_inserted);
                 return;
             }
 
-            pessoa.setId(novoId);
+            professional.setId(newID);
 
-            intent.putExtra(ID, pessoa.getId());
+            intent.putExtra(ID, professional.getId());
 
         }else{
 
-            Professional pessoaAlterada = new Professional(nome, tipo, bolsista, paymentType);
+            Professional professionalEdited = new Professional(name, tipo, isReferred, paymentType, comments);
 
-            pessoaAlterada.setId(originalProfessional.getId());
+            professionalEdited.setId(professionalAddedToEdit.getId());
 
-            int quantidadeAlterada = database.getProfessionalDao().update(pessoaAlterada);
+            int quantityEdited = database.getProfessionalDao().update(professionalEdited);
 
-            if (quantidadeAlterada == 0){
-                Dialogs.alert(this, R.string.erro_ao_tentar_alterar);
+            if (quantityEdited == 0){
+                Dialogs.alert(this, R.string.error_trying_edit);
                 return;
             }
 
-            intent.putExtra(ID, pessoaAlterada.getId());
+            intent.putExtra(ID, professionalEdited.getId());
         }
 
         setResult(Activity.RESULT_OK, intent);
         finish();
     }
 
-    public void limpar(){
+    public void clear(){
         editTextName.setText(null);
 
-        spinnerTipo.setSelection(0);
+        spinnerStatus.setSelection(0);
+
+        spinnerType.setSelection(0);
 
         checkBoxReferredProfessional.setChecked(false);
 
         radioGroupTypeOfPayment.clearCheck();
 
         Toast.makeText(this,
-                       R.string.as_entradas_foram_apagadas,
+                       R.string.entires_were_deleted,
                        Toast.LENGTH_SHORT).show();
     }
 
-    public void cancelar(){
+    public void cancel(){
         setResult(Activity.RESULT_CANCELED);
         finish();
     }
@@ -279,7 +294,7 @@ public class ProfessionalActivity extends AppCompatActivity {
 
         MenuItem item = menu.findItem(R.id.menuItemSugerirTipo);
 
-        item.setChecked(sugerirTipo);
+        item.setChecked(suggestType);
 
         return true;
     }
@@ -290,71 +305,71 @@ public class ProfessionalActivity extends AppCompatActivity {
         int idMenuItem = item.getItemId();
 
         if (idMenuItem == R.id.menuItemSalvar){
-            salvar();
+            save();
             return true;
         }else
             if (idMenuItem == R.id.menuItemLimpar){
-                limpar();
+                clear();
                 return true;
             }else
                 if (idMenuItem == R.id.menuItemSugerirTipo){
 
                     boolean valor = !item.isChecked();
 
-                    salvarSugerirTipo(valor);
+                    saveSuggestedType(valor);
                     item.setChecked(valor);
 
-                    if (sugerirTipo){
-                        spinnerTipo.setSelection(lastType);
+                    if (suggestType){
+                        spinnerType.setSelection(lastType);
                     }
 
                     return true;
                 }else
                     if (idMenuItem == android.R.id.home){
-                        cancelar();
+                        cancel();
                         return true;
                     }else{
                         return super.onOptionsItemSelected(item);
                     }
     }
 
-    private void lerSugerirTipo(){
+    private void readSuggestedType(){
 
-        SharedPreferences shared = getSharedPreferences(MainActivity.ARQUIVO, Context.MODE_PRIVATE);
+        SharedPreferences shared = getSharedPreferences(MainActivity.FILE, Context.MODE_PRIVATE);
 
-        sugerirTipo = shared.getBoolean(SUGERIR_TIPO, sugerirTipo);
+        suggestType = shared.getBoolean(SUGERIR_TIPO, suggestType);
     }
 
-    private void salvarSugerirTipo(boolean novoValor){
+    private void saveSuggestedType(boolean newValue){
 
-        SharedPreferences shared = getSharedPreferences(MainActivity.ARQUIVO, Context.MODE_PRIVATE);
+        SharedPreferences shared = getSharedPreferences(MainActivity.FILE, Context.MODE_PRIVATE);
 
         SharedPreferences.Editor editor = shared.edit();
 
-        editor.putBoolean(SUGERIR_TIPO, novoValor);
+        editor.putBoolean(SUGERIR_TIPO, newValue);
 
         editor.commit();
 
-        sugerirTipo = novoValor;
+        suggestType = newValue;
     }
 
-    private void lerUltimoTipo(){
+    private void readLastType(){
 
-        SharedPreferences shared = getSharedPreferences(MainActivity.ARQUIVO, Context.MODE_PRIVATE);
+        SharedPreferences shared = getSharedPreferences(MainActivity.FILE, Context.MODE_PRIVATE);
 
-        lastType = shared.getInt(ULTIMO_TIPO, lastType);
+        lastType = shared.getInt(LAST_TYPE, lastType);
     }
 
-    private void salvarUltimoTipo(int novoValor){
+    private void saveLastType(int newValue){
 
-        SharedPreferences shared = getSharedPreferences(MainActivity.ARQUIVO, Context.MODE_PRIVATE);
+        SharedPreferences shared = getSharedPreferences(MainActivity.FILE, Context.MODE_PRIVATE);
 
         SharedPreferences.Editor editor = shared.edit();
 
-        editor.putInt(ULTIMO_TIPO, novoValor);
+        editor.putInt(LAST_TYPE, newValue);
 
         editor.commit();
 
-        lastType = novoValor;
+        lastType = newValue;
     }
 }

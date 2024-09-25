@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
 
     private int positionSelected = -1;
 
-    public static final String ARQUIVO = "com.tecnologiaefinancas.newcadastroprofissionais.PREFERENCIAIS";
+    public static final String FILE = "com.tecnologiaefinancas.newcadastroprofissionais.PREFERENCIAIS";
 
     public static final String ORDENACAO_ASCENDENTE = "ORDENACAO_ASCENDENTE";
 
@@ -163,7 +163,7 @@ public class MainActivity extends AppCompatActivity {
 
         final Professional professional = professionalList.get(positionSelected);
 
-        String message = getString(R.string.deseja_realmente_apagar) + "\n" + "\"" + professional.getNome() + "\"";
+        String message = getString(R.string.really_wanna_delete) + "\n" + "\"" + professional.getName() + "\"";
 
         DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener(){
 
@@ -183,7 +183,7 @@ public class MainActivity extends AppCompatActivity {
                             listAdapter.notifyDataSetChanged();
                             mode.finish();
                         }else{
-                            Dialogs.alert(MainActivity.this, R.string.erro_ao_tentar_apagar);
+                            Dialogs.alert(MainActivity.this, R.string.error_trying_delete);
                         }
                         break;
 
@@ -324,14 +324,14 @@ public class MainActivity extends AppCompatActivity {
 
     private void lerPreferenciaOrdenacaoAscendente(){
 
-        SharedPreferences shared = getSharedPreferences(ARQUIVO, Context.MODE_PRIVATE);
+        SharedPreferences shared = getSharedPreferences(FILE, Context.MODE_PRIVATE);
 
         ascendingOrder = shared.getBoolean(ORDENACAO_ASCENDENTE, ascendingOrder);
     }
 
     private void salvarPreferenciaOrdenacaoAscendente(boolean newValue){
 
-        SharedPreferences shared = getSharedPreferences(ARQUIVO, Context.MODE_PRIVATE);
+        SharedPreferences shared = getSharedPreferences(FILE, Context.MODE_PRIVATE);
 
         SharedPreferences.Editor editor = shared.edit();
 

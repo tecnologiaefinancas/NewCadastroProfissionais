@@ -2,6 +2,8 @@
     <string name="app_name">Register Professionals</string>
     <string name="add">Add</string>
     <string name="about">About</string>
+    <string name="logo_description">Logo UTFPR</string>
+    <string name="java_specialization">Java Specialization</string>
     <string name="app_description">The goal of the app is to create an environment to centralize information regarding the personal list of Doctors and Service Providers.
 
 In the app, it is possible to track if the professional was recommended by a friend, if the service has already been provided, among other things.</string>
@@ -10,23 +12,28 @@ In the app, it is possible to track if the professional was recommended by a fri
     <string name="clear">Clean</string>
     <string name="cancel">Cancel</string>
     <string name="name">Name:</string>
-    <string name="create_professional">Create or Edit Professional.</string>
+    <string name="create_professional">Create or Edit Professional:</string>
     <string name="name_cant_be_empty">Name cannot be empty!</string>
-    <string name="as_entradas_foram_apagadas">The entries have been deleted!</string>
+    <string name="entires_were_deleted">The entries have been deleted!</string>
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
     <string name="new_professional">New Professional</string>
     <string name="edit_professional">Edit Professional</string>
 
+    <string name="select_professional">Select Type of Professional</string>
     <string name="professional">Doctor</string>
     <string name="maintenance">Maintenance</string>
 
 
     <string name="type">Type of professional:</string>
     <string name="type_cant_be_empty">Type cannot be empty!</string>
-    <string name="sugerir_tipo">Suggest Type</string>
-    <string name="ordenacao">Ordering</string>
-    <string name="referred_professional">Referred professional</string>
+    <string name="suggest_type">Suggest Type</string>
+    <string name="ordering">Ordering</string>
+    <string name="referred_professional">Received referral</string>
+    <string name="service_status">Service status:</string>
+    <string name="select_option">Select option:</string>
+    <string name="scheduled">Scheduled</string>
+    <string name="completed">Completed</string>
     <string name="payment_type">Payment used:</string>
     <string name="pix">Pix</string>
     <string name="boleto">Bill</string>
@@ -41,10 +48,10 @@ In the app, it is possible to track if the professional was recommended by a fri
     <string name="confirmation">Confirmation</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
-    <string name="deseja_realmente_apagar">Do you really want to delete?</string>
+    <string name="really_wanna_delete">Do you really want to delete?</string>
 
-    <string name="erro_ao_tentar_inserir">Error trying to insert!</string>
-    <string name="erro_ao_tentar_alterar">Error trying to change!</string>
-    <string name="erro_ao_tentar_apagar">Error trying to delete!</string>
+    <string name="error_not_inserted">Error trying to insert!</string>
+    <string name="error_trying_edit">Error trying to change!</string>
+    <string name="error_trying_delete">Error trying to delete!</string>
 
 </resources>

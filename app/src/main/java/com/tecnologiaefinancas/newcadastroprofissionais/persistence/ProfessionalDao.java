@@ -25,9 +25,9 @@ public interface ProfessionalDao {
     @Query("SELECT * FROM Professional WHERE id = :id")
     Professional queryForId(long id);
 
-    @Query("SELECT * FROM Professional ORDER BY nome ASC")
+    @Query("SELECT * FROM Professional ORDER BY name ASC")
     List<Professional> queryAllAscending();
 
-    @Query("SELECT * FROM Professional ORDER BY nome DESC")
+    @Query("SELECT * FROM Professional ORDER BY name DESC")
     List<Professional> queryAllDownward();
 }

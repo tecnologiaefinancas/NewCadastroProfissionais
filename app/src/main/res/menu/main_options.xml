@@ -6,7 +6,7 @@
         android:id="@+id/menuItemAdd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:icon="@android:drawable/ic_menu_add"
+        android:icon="@drawable/ic_add"
         android:title="@string/add"
         app:showAsAction="ifRoom" />
     <item
@@ -14,7 +14,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:icon="@drawable/ic_action_ordenacao_ascendente"
-        android:title="@string/ordenacao"
+        android:title="@string/ordering"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/menuItemAbout"

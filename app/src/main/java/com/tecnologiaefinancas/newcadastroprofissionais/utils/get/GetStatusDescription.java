@@ -1,26 +1,29 @@
 package com.tecnologiaefinancas.newcadastroprofissionais.utils.get;
 
-import com.tecnologiaefinancas.newcadastroprofissionais.model.StatusProfessional;
+import android.content.Context;
+
+import com.tecnologiaefinancas.newcadastroprofissionais.model.ServiceStatus;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class GetStatusDescription {
 
-    public static List<String> getStatusDescriptions() {
+    public static List<String> getStatusDescriptions(Context context) {
         List<String> descriptions = new ArrayList<>();
-        for (StatusProfessional status : StatusProfessional.values()) {
-            descriptions.add(status.getDescricao());
+        for (ServiceStatus status : ServiceStatus.values()) {
+            descriptions.add(status.getDescricao(context));
         }
         return descriptions;
     }
 
-    public static StatusProfessional getStatusFromDescription(String description) {
-        for (StatusProfessional status : StatusProfessional.values()) {
-            if (status.getDescricao().equals(description)) {
+    public static ServiceStatus getStatusFromDescription(Context context, String description) {
+        for (ServiceStatus status : ServiceStatus.values()) {
+            if (status.getDescricao(context).equals(description)) {
                 return status;
             }
         }
-        return StatusProfessional.SELECIONAR;
+        return ServiceStatus.SELECT_STATUS;
     }
 }
+

@@ -77,11 +77,11 @@
 
             Professional professional = doctorsList.get(position);
 
-            holder.textViewNameValue.setText(professional.getNome());
+            holder.textViewNameValue.setText(professional.getName());
 
             holder.textViewTypeValue.setText(tipos[professional.getTipo()]);
 
-            if (professional.isIndicado()){
+            if (professional.isReferred()){
                 holder.textViewReferredProfessionalValue.setText(R.string.referred_professional);
             }else{
                 holder.textViewReferredProfessionalValue.setText(R.string.not_referred);

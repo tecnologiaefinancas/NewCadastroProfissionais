@@ -2,6 +2,7 @@
 <resources>
 
     <string-array name="types">
+        <item>@string/select_option</item>
         <item>@string/professional</item>
         <item>@string/maintenance</item>
 
