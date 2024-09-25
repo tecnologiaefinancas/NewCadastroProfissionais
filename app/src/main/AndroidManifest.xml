@@ -13,7 +13,7 @@
         android:theme="@style/Theme.Room1c"
         tools:targetApi="31">
         <activity
-            android:name=".DoctorActivity"
+            android:name=".ProfessionalActivity"
             android:exported="false"
             android:parentActivityName=".MainActivity">
             <!-- Parent activity meta-data to support 4.0 and lower -->

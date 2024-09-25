@@ -9,27 +9,27 @@
 
     import java.util.List;
 
-    import com.tecnologiaefinancas.newcadastroprofissionais.model.Doctor;
+    import com.tecnologiaefinancas.newcadastroprofissionais.model.Professional;
     import com.tecnologiaefinancas.newcadastroprofissionais.model.PaymentType;
 
-    public class DoctorAdapter extends BaseAdapter {
+    public class ProfessionalAdapter extends BaseAdapter {
 
         private Context context;
 
-        private List<Doctor> doctorsList;
+        private List<Professional> doctorsList;
 
         private String[] tipos;
 
         private static class DoctorHolder {
             public TextView textViewNameValue;
-            public TextView textViewValorTipo;
-            public TextView textViewValorBolsista;
+            public TextView textViewTypeValue;
+            public TextView textViewReferredProfessionalValue;
             public TextView textViewPaymentTypeValue;
         }
 
-        public DoctorAdapter(Context context, List<Doctor> doctor){
+        public ProfessionalAdapter(Context context, List<Professional> professional){
             this.context = context;
-            this.doctorsList = doctor;
+            this.doctorsList = professional;
 
             tipos = context.getResources().getStringArray(R.array.types);
         }
@@ -62,37 +62,38 @@
                 holder = new DoctorHolder();
 
                 holder.textViewNameValue = convertView.findViewById(R.id.textViewNameValue);
-                holder.textViewValorTipo     = convertView.findViewById(R.id.textViewTypeValue);
-                holder.textViewValorBolsista = convertView.findViewById(R.id.textViewReferredProfessional);
-                holder.textViewPaymentTypeValue = convertView.findViewById(R.id.textViewPaymentType);
+                holder.textViewTypeValue     = convertView.findViewById(R.id.textViewTypeValue);
+                holder.textViewReferredProfessionalValue = convertView.findViewById(R.id.textViewReferredProfessionalValue);
+                holder.textViewPaymentTypeValue = convertView.findViewById(R.id.textViewPaymentTypeValue);
 
                 convertView.setTag(holder);
 
             }else{
 
+
                 holder = (DoctorHolder) convertView.getTag();
 
             }
 
-            Doctor doctor = doctorsList.get(position);
+            Professional professional = doctorsList.get(position);
 
-            holder.textViewNameValue.setText(doctor.getNome());
+            holder.textViewNameValue.setText(professional.getNome());
 
-            holder.textViewValorTipo.setText(tipos[doctor.getTipo()]);
+            holder.textViewTypeValue.setText(tipos[professional.getTipo()]);
 
-            if (doctor.isIndicado()){
-                holder.textViewValorBolsista.setText(R.string.referred_professional);
+            if (professional.isIndicado()){
+                holder.textViewReferredProfessionalValue.setText(R.string.referred_professional);
             }else{
-                holder.textViewValorBolsista.setText(R.string.not_referred);
+                holder.textViewReferredProfessionalValue.setText(R.string.not_referred);
             }
 
-            if (doctor.getPaymentType() == PaymentType.PIX){
+            if (professional.getPaymentType() == PaymentType.PIX){
                 holder.textViewPaymentTypeValue.setText(R.string.pix);
             }else
-                if (doctor.getPaymentType() == PaymentType.Boleto){
+                if (professional.getPaymentType() == PaymentType.Boleto){
                     holder.textViewPaymentTypeValue.setText(R.string.boleto);
                 }else
-                    if (doctor.getPaymentType() == PaymentType.Cartao){
+                    if (professional.getPaymentType() == PaymentType.Cartao){
                         holder.textViewPaymentTypeValue.setText(R.string.credit_card);
                     }
 

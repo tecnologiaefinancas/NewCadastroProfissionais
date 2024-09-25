@@ -12,6 +12,7 @@
     <string name="clear">Limpar</string>
     <string name="cancel">Cancelar</string>
     <string name="name">Nome:</string>
+    <string name="create_professional">Crie ou edite o profissional, conforme abaixo.</string>
     <string name="name_cant_be_empty">Nome não pode ser vazio!</string>
     <string name="as_entradas_foram_apagadas">As entradas foram apagadas!</string>
     <string name="edit">Editar</string>
@@ -19,11 +20,11 @@
     <string name="new_professional">Novo Profissional</string>
     <string name="edit_professional">Editar Profissional</string>
 
-    <string name="doctor">Médico</string>
+    <string name="professional">Médico</string>
     <string name="maintenance">Manutenção</string>
 
 
-    <string name="type">Tipo:</string>
+    <string name="type">Tipo de profissional:</string>
     <string name="type_cant_be_empty">Tipo não pode ser vazio!</string>
     <string name="sugerir_tipo">Sugerir Tipo</string>
     <string name="ordenacao">Ordenacao</string>
@@ -32,6 +33,9 @@
     <string name="pix">Pix</string>
     <string name="boleto">Boleto</string>
     <string name="credit_card">Cartão</string>
+    <string name="other_payment">Outra forma de pagamento.</string>
+    <string name="not_payed_yet">Ainda não pago.</string>
+    <string name="comments">Comentários:</string>
     <string name="payment_type_cant_be_empty">A forma de pagamento não pode estar vazia!</string>
     <string name="not_referred">Profissional não foi sugerido anteriormente por alguém.</string>
     <string name="warn">Aviso</string>

@@ -1,5 +1,6 @@
 package com.tecnologiaefinancas.newcadastroprofissionais;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -7,11 +8,13 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -19,12 +22,13 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.tecnologiaefinancas.newcadastroprofissionais.model.Doctor;
+import com.tecnologiaefinancas.newcadastroprofissionais.model.Professional;
 import com.tecnologiaefinancas.newcadastroprofissionais.model.PaymentType;
-import com.tecnologiaefinancas.newcadastroprofissionais.persistence.DoctorDatabase;
-import com.tecnologiaefinancas.newcadastroprofissionais.utils.UtilsGUI;
+import com.tecnologiaefinancas.newcadastroprofissionais.persistence.ProfessionalDatabase;
+import com.tecnologiaefinancas.newcadastroprofissionais.utils.get.GetStatusDescription;
+import com.tecnologiaefinancas.newcadastroprofissionais.utils.Dialogs;
 
-public class DoctorActivity extends AppCompatActivity {
+public class ProfessionalActivity extends AppCompatActivity {
 
     public static final String MODO = "MODO";
 
@@ -34,17 +38,25 @@ public class DoctorActivity extends AppCompatActivity {
 
     public static final int EDITAR = 2;
 
-    private EditText editTextNome;
+    private TextView textViewCreateProfessional;
+
+    private EditText editTextName;
 
     private Spinner spinnerTipo;
 
-    private CheckBox checkBoxBolsista;
+    private CheckBox checkBoxReferredProfessional;
 
-    private RadioGroup radioGroupMaoUsada;
+    private RadioGroup radioGroupTypeOfPayment;
+
+    private TextView textViewComments;
+
+    private EditText editTextMultiLineComments;
+
+    private Spinner spinnerStatus;
 
     private int modo;
 
-    private Doctor originalDoctor;
+    private Professional originalProfessional;
 
     public static final String SUGERIR_TIPO = "SUGERIR_TPO";
 
@@ -52,20 +64,20 @@ public class DoctorActivity extends AppCompatActivity {
 
     private boolean sugerirTipo = false;
 
-    private int ultimoTipo = 0;
+    private int lastType = 0;
 
     public static void newDoctor(AppCompatActivity activity, ActivityResultLauncher<Intent> launcher){
 
-        Intent intent = new Intent(activity, DoctorActivity.class);
+        Intent intent = new Intent(activity, ProfessionalActivity.class);
 
         intent.putExtra(MODO, NOVO);
 
         launcher.launch(intent);
     }
 
-    public static void doctorEdit(AppCompatActivity activity, ActivityResultLauncher<Intent> launcher, Doctor pessoa){
+    public static void professionalEdit(AppCompatActivity activity, ActivityResultLauncher<Intent> launcher, Professional pessoa){
 
-        Intent intent = new Intent(activity, DoctorActivity.class);
+        Intent intent = new Intent(activity, ProfessionalActivity.class);
 
         intent.putExtra(MODO, EDITAR);
         intent.putExtra(ID, pessoa.getId());
@@ -73,6 +85,7 @@ public class DoctorActivity extends AppCompatActivity {
         launcher.launch(intent);
     }
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,16 +96,25 @@ public class DoctorActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        editTextNome       = findViewById(R.id.editTextTextNome);
+        textViewCreateProfessional = findViewById(R.id.textViewCreateProfessional);
+        editTextName = findViewById(R.id.editTextName);
         spinnerTipo        = findViewById(R.id.spinnerTipo);
-        checkBoxBolsista   = findViewById(R.id.checkBoxBolsista);
-        radioGroupMaoUsada = findViewById(R.id.radioGroupMaoUsada);
+        checkBoxReferredProfessional = findViewById(R.id.checkBoxReferredProfessional);
+        radioGroupTypeOfPayment = findViewById(R.id.radioGroupTypeOfPayment);
+        spinnerStatus = findViewById(R.id.spinnerStatus);
+        textViewComments = findViewById(R.id.textViewComments);
+        editTextMultiLineComments = findViewById(R.id.editTextMultiLineComments);
 
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
 
         lerSugerirTipo();
         lerUltimoTipo();
+
+        //Criacao de adapter para uso no Spinner
+        ArrayAdapter<String> adapterStatus = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, GetStatusDescription.getStatusDescriptions());
+        adapterStatus.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerStatus.setAdapter(adapterStatus);
 
         if (bundle != null) {
 
@@ -102,7 +124,7 @@ public class DoctorActivity extends AppCompatActivity {
                 setTitle(getString(R.string.new_professional));
 
                 if (sugerirTipo){
-                    spinnerTipo.setSelection(ultimoTipo);
+                    spinnerTipo.setSelection(lastType);
                 }
 
             } else if (modo == EDITAR) {
@@ -110,29 +132,29 @@ public class DoctorActivity extends AppCompatActivity {
 
                 long id = bundle.getLong(ID);
 
-                DoctorDatabase database = DoctorDatabase.getDatabase(this);
+                ProfessionalDatabase database = ProfessionalDatabase.getDatabase(this);
 
-                originalDoctor = database.getDoctorDao().queryForId(id);
+                originalProfessional = database.getProfessionalDao().queryForId(id);
 
-                editTextNome.setText(originalDoctor.getNome());
-                editTextNome.setSelection(editTextNome.getText().length());
+                editTextName.setText(originalProfessional.getNome());
+                editTextName.setSelection(editTextName.getText().length());
 
-                spinnerTipo.setSelection(originalDoctor.getTipo());
+                spinnerTipo.setSelection(originalProfessional.getTipo());
 
-                checkBoxBolsista.setChecked(originalDoctor.isIndicado());
+                checkBoxReferredProfessional.setChecked(originalProfessional.isIndicado());
 
-                PaymentType originalPaymentType = originalDoctor.getPaymentType();
+                PaymentType originalPaymentType = originalProfessional.getPaymentType();
 
                 RadioButton button = null;
 
                 if (originalPaymentType == PaymentType.PIX){
-                    button = findViewById(R.id.radioButtonDireita);
+                    button = findViewById(R.id.radioButtonPix);
                 }else
                     if (originalPaymentType == PaymentType.Boleto){
-                        button = findViewById(R.id.radioButtonEsquerda);
+                        button = findViewById(R.id.radioButtonBill);
                     }else
                         if (originalPaymentType == PaymentType.Cartao){
-                            button = findViewById(R.id.radioButtonAmbas);
+                            button = findViewById(R.id.radioButtonCreditCard);
                         }
 
                 if (button != null){
@@ -144,44 +166,44 @@ public class DoctorActivity extends AppCompatActivity {
 
     public void salvar(){
 
-        String nome = editTextNome.getText().toString();
+        String nome = editTextName.getText().toString();
 
         if (nome == null || nome.trim().isEmpty()){
-            UtilsGUI.alert(this, R.string.name_cant_be_empty);
-            editTextNome.requestFocus();
+            Dialogs.alert(this, R.string.name_cant_be_empty);
+            editTextName.requestFocus();
             return;
         }
 
         int tipo = spinnerTipo.getSelectedItemPosition();
         if (tipo < 0){
-            UtilsGUI.alert(this, R.string.type_cant_be_empty);
+            Dialogs.alert(this, R.string.type_cant_be_empty);
             return;
         }
 
-        boolean bolsista = checkBoxBolsista.isChecked();
+        boolean bolsista = checkBoxReferredProfessional.isChecked();
 
-        int radioButtonId = radioGroupMaoUsada.getCheckedRadioButtonId();
+        int radioButtonId = radioGroupTypeOfPayment.getCheckedRadioButtonId();
 
         PaymentType paymentType;
 
-        if (radioButtonId == R.id.radioButtonDireita){
+        if (radioButtonId == R.id.radioButtonPix){
             paymentType = PaymentType.PIX;
         }else
-            if (radioButtonId == R.id.radioButtonEsquerda){
+            if (radioButtonId == R.id.radioButtonBill){
                 paymentType = PaymentType.Boleto;
             }else
-                if (radioButtonId == R.id.radioButtonAmbas){
+                if (radioButtonId == R.id.radioButtonCreditCard){
                     paymentType = PaymentType.Cartao;
                 }else{
-                    UtilsGUI.alert(this, R.string.payment_type_cant_be_empty);
+                    Dialogs.alert(this, R.string.payment_type_cant_be_empty);
                     return;
                 }
 
         if (modo == EDITAR &&
-            nome.equals(originalDoctor.getNome())    &&
-            tipo     == originalDoctor.getTipo()     &&
-            paymentType == originalDoctor.getPaymentType() &&
-            bolsista == originalDoctor.isIndicado()){
+            nome.equals(originalProfessional.getNome())    &&
+            tipo     == originalProfessional.getTipo()     &&
+            paymentType == originalProfessional.getPaymentType() &&
+            bolsista == originalProfessional.isIndicado()){
             cancelar();
             return;
         }
@@ -190,16 +212,16 @@ public class DoctorActivity extends AppCompatActivity {
 
         Intent intent = new Intent();
 
-        DoctorDatabase database = DoctorDatabase.getDatabase(this);
+        ProfessionalDatabase database = ProfessionalDatabase.getDatabase(this);
 
         if (modo == NOVO){
 
-            Doctor pessoa = new Doctor(nome, tipo, bolsista, paymentType);
+            Professional pessoa = new Professional(nome, tipo, bolsista, paymentType);
 
-            long novoId = database.getDoctorDao().insert(pessoa);
+            long novoId = database.getProfessionalDao().insert(pessoa);
 
             if (novoId <= 0){
-                UtilsGUI.alert(this, R.string.erro_ao_tentar_inserir);
+                Dialogs.alert(this, R.string.erro_ao_tentar_inserir);
                 return;
             }
 
@@ -209,14 +231,14 @@ public class DoctorActivity extends AppCompatActivity {
 
         }else{
 
-            Doctor pessoaAlterada = new Doctor(nome, tipo, bolsista, paymentType);
+            Professional pessoaAlterada = new Professional(nome, tipo, bolsista, paymentType);
 
-            pessoaAlterada.setId(originalDoctor.getId());
+            pessoaAlterada.setId(originalProfessional.getId());
 
-            int quantidadeAlterada = database.getDoctorDao().update(pessoaAlterada);
+            int quantidadeAlterada = database.getProfessionalDao().update(pessoaAlterada);
 
             if (quantidadeAlterada == 0){
-                UtilsGUI.alert(this, R.string.erro_ao_tentar_alterar);
+                Dialogs.alert(this, R.string.erro_ao_tentar_alterar);
                 return;
             }
 
@@ -228,13 +250,13 @@ public class DoctorActivity extends AppCompatActivity {
     }
 
     public void limpar(){
-        editTextNome.setText(null);
+        editTextName.setText(null);
 
         spinnerTipo.setSelection(0);
 
-        checkBoxBolsista.setChecked(false);
+        checkBoxReferredProfessional.setChecked(false);
 
-        radioGroupMaoUsada.clearCheck();
+        radioGroupTypeOfPayment.clearCheck();
 
         Toast.makeText(this,
                        R.string.as_entradas_foram_apagadas,
@@ -248,7 +270,7 @@ public class DoctorActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.doctor_options, menu);
+        getMenuInflater().inflate(R.menu.professional_options, menu);
         return true;
     }
 
@@ -283,7 +305,7 @@ public class DoctorActivity extends AppCompatActivity {
                     item.setChecked(valor);
 
                     if (sugerirTipo){
-                        spinnerTipo.setSelection(ultimoTipo);
+                        spinnerTipo.setSelection(lastType);
                     }
 
                     return true;
@@ -320,7 +342,7 @@ public class DoctorActivity extends AppCompatActivity {
 
         SharedPreferences shared = getSharedPreferences(MainActivity.ARQUIVO, Context.MODE_PRIVATE);
 
-        ultimoTipo = shared.getInt(ULTIMO_TIPO, ultimoTipo);
+        lastType = shared.getInt(ULTIMO_TIPO, lastType);
     }
 
     private void salvarUltimoTipo(int novoValor){
@@ -333,6 +355,6 @@ public class DoctorActivity extends AppCompatActivity {
 
         editor.commit();
 
-        ultimoTipo = novoValor;
+        lastType = novoValor;
     }
 }

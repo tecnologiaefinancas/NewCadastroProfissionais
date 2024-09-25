@@ -2,7 +2,7 @@
 <resources>
 
     <string-array name="types">
-        <item>@string/doctor</item>
+        <item>@string/professional</item>
         <item>@string/maintenance</item>
 
     </string-array>

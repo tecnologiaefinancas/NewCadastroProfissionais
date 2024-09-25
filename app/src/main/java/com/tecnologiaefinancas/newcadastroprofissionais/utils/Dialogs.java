@@ -7,7 +7,7 @@ import androidx.appcompat.app.AlertDialog;
 
 import com.tecnologiaefinancas.newcadastroprofissionais.R;
 
-public class UtilsGUI {
+public class Dialogs {
 
     public static void alert(Context context, int idText){
 

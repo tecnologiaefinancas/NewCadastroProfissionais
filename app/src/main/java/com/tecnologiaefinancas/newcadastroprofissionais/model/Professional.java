@@ -6,19 +6,19 @@ import androidx.room.PrimaryKey;
 import java.util.Comparator;
 
 @Entity
-public class Doctor {
+public class Professional {
 
-    public static Comparator ordenacaoCrescente = new Comparator<Doctor>() {
+    public static Comparator ordenacaoCrescente = new Comparator<Professional>() {
         @Override
-        public int compare(Doctor pessoa1, Doctor pessoa2) {
+        public int compare(Professional pessoa1, Professional pessoa2) {
             return pessoa1.getNome().compareToIgnoreCase(pessoa2.getNome());
         }
     };
 
-    public static Comparator ordenacaoDecrescente = new Comparator<Doctor>() {
+    public static Comparator ordenacaoDecrescente = new Comparator<Professional>() {
         @Override
-        public int compare(Doctor doctorA, Doctor doctorB) {
-            return -1 * doctorA.getNome().compareToIgnoreCase(doctorB.getNome());
+        public int compare(Professional professionalA, Professional professionalB) {
+            return -1 * professionalA.getNome().compareToIgnoreCase(professionalB.getNome());
         }
     };
 
@@ -33,7 +33,7 @@ public class Doctor {
 
     private PaymentType paymentType;
 
-    public Doctor(String nome, int tipo, boolean indicado, PaymentType paymentType) {
+    public Professional(String nome, int tipo, boolean indicado, PaymentType paymentType) {
         this.nome     = nome;
         this.tipo     = tipo;
         this.indicado = indicado;

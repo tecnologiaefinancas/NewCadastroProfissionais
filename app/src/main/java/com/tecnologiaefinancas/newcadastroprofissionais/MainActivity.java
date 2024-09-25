@@ -25,17 +25,17 @@ import androidx.appcompat.view.ActionMode;
 import java.util.Collections;
 import java.util.List;
 
-import com.tecnologiaefinancas.newcadastroprofissionais.model.Doctor;
-import com.tecnologiaefinancas.newcadastroprofissionais.persistence.DoctorDatabase;
-import com.tecnologiaefinancas.newcadastroprofissionais.utils.UtilsGUI;
+import com.tecnologiaefinancas.newcadastroprofissionais.model.Professional;
+import com.tecnologiaefinancas.newcadastroprofissionais.persistence.ProfessionalDatabase;
+import com.tecnologiaefinancas.newcadastroprofissionais.utils.Dialogs;
 
 public class MainActivity extends AppCompatActivity {
 
-    private ListView listViewDoctors;
+    private ListView listViewProfessionals;
 
-    private DoctorAdapter listAdapter;
+    private ProfessionalAdapter listAdapter;
 
-    private List<Doctor> doctorsList;
+    private List<Professional> professionalList;
 
     private ActionMode actionMode;
 
@@ -69,12 +69,12 @@ public class MainActivity extends AppCompatActivity {
             int idMenuItem = item.getItemId();
 
             if (idMenuItem == R.id.itemMenuEdit){
-                doctorEdit();
+                professionalEdit();
                 mode.finish();
                 return true;
             }else
                 if (idMenuItem == R.id.idemMenuDelete){
-                    doctorDelete(mode);
+                    professionalDelete(mode);
                     return true;
                 }else{
                     return false;
@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
             actionMode = null;
             viewSelected = null;
 
-            listViewDoctors.setEnabled(true);
+            listViewProfessionals.setEnabled(true);
         }
     };
 
@@ -102,19 +102,19 @@ public class MainActivity extends AppCompatActivity {
 
         setTitle(getString(R.string.app_name));
 
-        listViewDoctors = findViewById(R.id.listViewDoctors);
+        listViewProfessionals = findViewById(R.id.listViewProfessionals);
 
-        listViewDoctors.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+        listViewProfessionals.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 
-        listViewDoctors.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        listViewProfessionals.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 positionSelected = position;
-                doctorEdit();
+                professionalEdit();
             }
         });
 
-        listViewDoctors.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+        listViewProfessionals.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent,
                                            View view,
@@ -131,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
 
                 viewSelected = view;
 
-                listViewDoctors.setEnabled(false);
+                listViewProfessionals.setEnabled(false);
 
                 actionMode = startSupportActionMode(mActionModeCallback);
 
@@ -146,24 +146,24 @@ public class MainActivity extends AppCompatActivity {
 
     private void popularLista(){
 
-        DoctorDatabase database = DoctorDatabase.getDatabase(this);
+        ProfessionalDatabase database = ProfessionalDatabase.getDatabase(this);
 
         if (ascendingOrder){
-            doctorsList = database.getDoctorDao().queryAllAscending();
+            professionalList = database.getProfessionalDao().queryAllAscending();
         }else{
-            doctorsList = database.getDoctorDao().queryAllDownward();
+            professionalList = database.getProfessionalDao().queryAllDownward();
         }
 
-        listAdapter = new DoctorAdapter(this, doctorsList);
+        listAdapter = new ProfessionalAdapter(this, professionalList);
 
-        listViewDoctors.setAdapter(listAdapter);
+        listViewProfessionals.setAdapter(listAdapter);
     }
 
-    private void doctorDelete(final ActionMode mode){
+    private void professionalDelete(final ActionMode mode){
 
-        final Doctor doctor = doctorsList.get(positionSelected);
+        final Professional professional = professionalList.get(positionSelected);
 
-        String mensagem = getString(R.string.deseja_realmente_apagar) + "\n" + "\"" + doctor.getNome() + "\"";
+        String message = getString(R.string.deseja_realmente_apagar) + "\n" + "\"" + professional.getNome() + "\"";
 
         DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener(){
 
@@ -174,16 +174,16 @@ public class MainActivity extends AppCompatActivity {
 
                     case DialogInterface.BUTTON_POSITIVE:
 
-                        DoctorDatabase database = DoctorDatabase.getDatabase(MainActivity.this);
+                        ProfessionalDatabase database = ProfessionalDatabase.getDatabase(MainActivity.this);
 
-                        int quantidadeAlterada = database.getDoctorDao().delete(doctor);
+                        int quantidadeAlterada = database.getProfessionalDao().delete(professional);
 
                         if (quantidadeAlterada > 0){
-                            doctorsList.remove(positionSelected);
+                            professionalList.remove(positionSelected);
                             listAdapter.notifyDataSetChanged();
                             mode.finish();
                         }else{
-                            UtilsGUI.alert(MainActivity.this, R.string.erro_ao_tentar_apagar);
+                            Dialogs.alert(MainActivity.this, R.string.erro_ao_tentar_apagar);
                         }
                         break;
 
@@ -194,10 +194,10 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
-        UtilsGUI.actionConfirmation(this, mensagem, listener);
+        Dialogs.actionConfirmation(this, message, listener);
     }
 
-    ActivityResultLauncher<Intent> launcherDoctorEdit = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+    ActivityResultLauncher<Intent> launcherProfessionalEdit = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
 
             new ActivityResultCallback<ActivityResult>() {
                 @Override
@@ -211,13 +211,13 @@ public class MainActivity extends AppCompatActivity {
 
                         if (bundle != null){
 
-                            long id = bundle.getLong(DoctorActivity.ID);
+                            long id = bundle.getLong(ProfessionalActivity.ID);
 
-                            DoctorDatabase database = DoctorDatabase.getDatabase(MainActivity.this);
+                            ProfessionalDatabase database = ProfessionalDatabase.getDatabase(MainActivity.this);
 
-                            Doctor doctorAdded = database.getDoctorDao().queryForId(id);
+                            Professional professionalAdded = database.getProfessionalDao().queryForId(id);
 
-                            doctorsList.set(positionSelected, doctorAdded);
+                            professionalList.set(positionSelected, professionalAdded);
 
                             positionSelected = -1;
 
@@ -227,11 +227,11 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
 
-    private void doctorEdit(){
+    private void professionalEdit(){
 
-        Doctor doctor = doctorsList.get(positionSelected);
+        Professional professional = professionalList.get(positionSelected);
 
-        DoctorActivity.doctorEdit(this, launcherDoctorEdit, doctor);
+        ProfessionalActivity.professionalEdit(this, launcherProfessionalEdit, professional);
     }
 
     ActivityResultLauncher<Intent> launcherNewDoctor = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
@@ -244,22 +244,23 @@ public class MainActivity extends AppCompatActivity {
 
                         Intent intent = result.getData();
 
+
                         Bundle bundle = intent.getExtras();
 
                         if (bundle != null){
 
-                            long id = bundle.getLong(DoctorActivity.ID);
+                            long id = bundle.getLong(ProfessionalActivity.ID);
 
-                            DoctorDatabase database = DoctorDatabase.getDatabase(MainActivity.this);
+                            ProfessionalDatabase database = ProfessionalDatabase.getDatabase(MainActivity.this);
 
-                            Doctor doctorAdded = database.getDoctorDao().queryForId(id);
+                            Professional professionalAdded = database.getProfessionalDao().queryForId(id);
 
-                            doctorsList.add(doctorAdded);
+                            professionalList.add(professionalAdded);
 
                             sortList();
-                        }
+                        }}
                     }
-                }
+
             });
 
     @Override
@@ -284,7 +285,7 @@ public class MainActivity extends AppCompatActivity {
         int idMenuItem = item.getItemId();
 
         if (idMenuItem == R.id.menuItemAdd){
-            DoctorActivity.newDoctor(this, launcherNewDoctor);
+            ProfessionalActivity.newDoctor(this, launcherNewDoctor);
             return true;
         }else
             if (idMenuItem == R.id.menuItemOrder){
@@ -294,7 +295,7 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }else
                 if (idMenuItem == R.id.menuItemAbout){
-                    AboutActivity.nova(this);
+                    AboutActivity.newActivity(this);
                     return true;
                 }else{
                     return super.onOptionsItemSelected(item);
@@ -313,9 +314,9 @@ public class MainActivity extends AppCompatActivity {
     private void sortList(){
 
         if (ascendingOrder){
-            Collections.sort(doctorsList, Doctor.ordenacaoCrescente);
+            Collections.sort(professionalList, Professional.ordenacaoCrescente);
         }else{
-            Collections.sort(doctorsList, Doctor.ordenacaoDecrescente);
+            Collections.sort(professionalList, Professional.ordenacaoDecrescente);
         }
 
         listAdapter.notifyDataSetChanged();

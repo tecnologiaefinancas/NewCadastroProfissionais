@@ -10,7 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class AboutActivity extends AppCompatActivity {
 
-    public static void nova(AppCompatActivity activity){
+    public static void newActivity(AppCompatActivity activity){
 
         Intent intent = new Intent(activity, AboutActivity.class);
 

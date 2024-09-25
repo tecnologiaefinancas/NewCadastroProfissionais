@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/textViewNome"
+        android:id="@+id/textViewName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -17,7 +17,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textViewValorNome"
+        android:id="@+id/textViewNameValue"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -26,11 +26,11 @@
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/textViewNome"
+        app:layout_constraintStart_toEndOf="@+id/textViewName"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textViewTipo"
+        android:id="@+id/textViewType"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -38,10 +38,10 @@
         android:layout_marginTop="8dp"
         android:text="@string/type"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewNome" />
+        app:layout_constraintTop_toBottomOf="@+id/textViewName" />
 
     <TextView
-        android:id="@+id/textViewValorTipo"
+        android:id="@+id/textViewTypeValue"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -50,11 +50,11 @@
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/textViewTipo"
-        app:layout_constraintTop_toBottomOf="@+id/textViewNome" />
+        app:layout_constraintStart_toEndOf="@+id/textViewType"
+        app:layout_constraintTop_toBottomOf="@+id/textViewName" />
 
     <TextView
-        android:id="@+id/textViewValorBolsista"
+        android:id="@+id/textViewReferredProfessionalValue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -62,10 +62,10 @@
         android:layout_marginTop="8dp"
         android:text="@string/referred_professional"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewTipo" />
+        app:layout_constraintTop_toBottomOf="@+id/textViewType" />
 
     <TextView
-        android:id="@+id/textViewTipoPagamento"
+        android:id="@+id/textViewPaymentType"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -73,10 +73,10 @@
         android:layout_marginTop="8dp"
         android:text="@string/payment_type"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewValorBolsista" />
+        app:layout_constraintTop_toBottomOf="@+id/textViewReferredProfessionalValue" />
 
     <TextView
-        android:id="@+id/textViewTipoPagamentoValue"
+        android:id="@+id/textViewPaymentTypeValue"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -85,6 +85,6 @@
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/textViewTipoPagamento"
-        app:layout_constraintTop_toBottomOf="@+id/textViewValorBolsista" />
+        app:layout_constraintStart_toEndOf="@+id/textViewPaymentType"
+        app:layout_constraintTop_toBottomOf="@+id/textViewReferredProfessionalValue" />
 </androidx.constraintlayout.widget.ConstraintLayout>

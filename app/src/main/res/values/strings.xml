@@ -10,6 +10,7 @@ In the app, it is possible to track if the professional was recommended by a fri
     <string name="clear">Clean</string>
     <string name="cancel">Cancel</string>
     <string name="name">Name:</string>
+    <string name="create_professional">Create or Edit Professional.</string>
     <string name="name_cant_be_empty">Name cannot be empty!</string>
     <string name="as_entradas_foram_apagadas">The entries have been deleted!</string>
     <string name="edit">Edit</string>
@@ -17,11 +18,11 @@ In the app, it is possible to track if the professional was recommended by a fri
     <string name="new_professional">New Professional</string>
     <string name="edit_professional">Edit Professional</string>
 
-    <string name="doctor">Doctor</string>
+    <string name="professional">Doctor</string>
     <string name="maintenance">Maintenance</string>
 
 
-    <string name="type">Type:</string>
+    <string name="type">Type of professional:</string>
     <string name="type_cant_be_empty">Type cannot be empty!</string>
     <string name="sugerir_tipo">Suggest Type</string>
     <string name="ordenacao">Ordering</string>
@@ -30,6 +31,9 @@ In the app, it is possible to track if the professional was recommended by a fri
     <string name="pix">Pix</string>
     <string name="boleto">Bill</string>
     <string name="credit_card">Credit Card</string>
+    <string name="other_payment">Other payment.</string>
+    <string name="not_payed_yet">Not payed yet.</string>
+    <string name="comments">Comments:</string>
     <string name="payment_type_cant_be_empty">Payment type can\'t be empty!</string>
     <string name="not_referred">Professional wasn\'t referred before.</string>
     <string name="warn">Warning</string>

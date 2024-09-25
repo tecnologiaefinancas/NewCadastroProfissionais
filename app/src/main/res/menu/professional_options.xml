@@ -16,10 +16,12 @@
         android:icon="@drawable/ic_action_clear"
         android:title="@string/clear"
         app:showAsAction="ifRoom" />
+
     <item
         android:id="@+id/menuItemSugerirTipo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:checkable="true"
         android:title="@string/sugerir_tipo" />
+
 </menu>
